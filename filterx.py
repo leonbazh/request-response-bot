@@ -1,6 +1,7 @@
 import string
+import datetime
 
-bad_words = [ 'бля', 'блядь', 'блять', 'b3ъeб', 'cock', 
+bad_words = [ '/' ,',' ,'.', 'бля', 'блядь', 'блять', 'b3ъeб', 'cock', 
              'cunt', 'e6aль', 'ebal', 'eblan', 'eбaл', 
              'eбaть', 'eбyч', 'eбать', 'eбёт', 'eблантий', 
              'fuck', 'fucker', 'fucking', 'xyёв', 'xyй', 'xyя', 
@@ -14,7 +15,7 @@ bad_words = [ 'бля', 'блядь', 'блять', 'b3ъeб', 'cock',
              'въебенн', 'въебусь', 'въебывать', 'выблядок', 'выблядыш', 'выеб',
              'выебать', 'выебен', 'выебнулся', 'выебон', 'выебываться', 'выпердеть',
              'высраться', 'выссаться', 'вьебен', 'гавно', 'гавнюк', 'гавнючка', 'гамно',
-             'гандон', 'гнид', 'гнида', 'гниды', 'говенка', 'говенный', 'говешка',
+             'гандон', 'гнида', 'гниды', 'говенка', 'говенный', 'говешка',
              'говназия', 'говнецо', 'говнище', 'говно', 'говноед', 'говнолинк', 'говночист',
              'говнюк', 'говнюха', 'говнядина', 'говняк', 'говняный', 'говнять', 'гондон', 'гандон',
              'доебываться', 'долбоеб', 'долбоёб', 'долбоящер', 'дрисня', 'дрист',
@@ -102,6 +103,7 @@ def distance(a, b):
             current_row[j] = min(add, delete, change)
 
     return current_row[n]
+
 def filter_bad_words(phrase):
     phrase = phrase.lower().replace(" ", "")
     flag = True
@@ -114,7 +116,57 @@ def filter_bad_words(phrase):
             #Если отличие этого фрагмента меньше или равно 25% этого слова, то считаем, что они равны.
             if distance(fragment, word) <= len(word)*0.25:
                 #Если они равны, выводим надпись о их нахождении.
+                print(word)
                 flag = False
                 
     return flag
 
+
+def filter_number(phrase):
+    if phrase.startswith("+79") and len(phrase) == 12:
+        if not phrase[3:].isdigit():
+            return False
+        return True
+    else:
+        return False
+    
+def filter_date(phrase):
+    now = datetime.datetime.now()
+    day = now.strftime("%d")
+    month = now.strftime("%m")
+    if len(phrase) == 5 and phrase[2] == '.':
+        if phrase[:2].isdigit() and phrase[3:].isdigit() and int(phrase[:2]) >= 1 and int(phrase[:2]) <=31 and int(phrase[3:])>= 1 and int(phrase[3:]) <= 12:
+            if phrase[:2] >= day and phrase [3:] >= month:
+                return True
+            else:
+                return False
+        else:
+            return False
+    else:
+        return False
+    
+
+def filter_time(phrase, client):
+    now = datetime.datetime.now()
+    hour = now.strftime("%H")
+    min = now.strftime("%M")
+    day = now.strftime("%d")
+    month = now.strftime("%m")
+    clientday = client[:2]
+    clientmonth = client[3:]
+    if len(phrase) == 5 and phrase[2] == ':':
+        if phrase[:2].isdigit() and phrase[3:].isdigit() and int(phrase[:2]) >= 0 and int(phrase[:2]) <=24 and int(phrase[3:])>= 0 and int(phrase[3:]) <= 59:
+            if clientday > day and clientmonth >= month :
+                return True
+            elif clientday == day and clientmonth > month:
+                return True
+            elif phrase[:2] > hour:
+                return True 
+            elif phrase[:2] == hour and phrase[3:] > min:
+                return True
+            else:
+                return False
+        else: 
+            return False
+    else:
+        return False
