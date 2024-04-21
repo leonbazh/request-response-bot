@@ -1,5 +1,6 @@
 import telebot
 from telebot import types
+import test
 
 token = '7032134012:AAGebBM3NygRmsIXaWW1grUcahAvdssjX6U'
 
@@ -7,6 +8,7 @@ bot = telebot.TeleBot(token)
 
 date = ""
 name = ""
+phone = ""
 oclock = ""
 
 @bot.message_handler(commands=['start'])
@@ -21,15 +23,21 @@ def start_message(message):
 @bot.message_handler(content_types='text')
 def reserve_message(message):
     if message.text == 'Забронировать':
-        bot.send_message(message.from_user.id, "Напишите пожалуйства в какую дату вы хотите прийти")
+        bot.send_message(message.from_user.id, "Напишите ваше имя. Например: Иван")
         bot.register_next_step_handler(message, get_date)
     
 
 def get_date(message):
     global date
-    date = message.text
-    bot.send_message(message.from_user.id, "Введите пожалуйста ваше имя и номер телефона")
-    bot.register_next_step_handler(message, get_name)
+    ejen = test.filter_bad_words(message.text)
+    if ejen == True:
+        name = message.text
+        bot.send_message(message.from_user.id, "Введите ваш номер телефона")
+        bot.register_next_step_handler(message, get_name)
+    else:
+        bot.send_message(message.from_user.id, "Не матерись пожалуйста. Введи повторно свое имя")
+        bot.register_next_step_handler(message, get_date)
+        
     
 def get_name(message):
     global name
