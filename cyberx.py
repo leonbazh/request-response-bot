@@ -17,7 +17,6 @@ def start_message(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Забронировать")
     markup.add(item1)
-    # photo = open('https://cyberx-franchise.ru/img/invest/cyberx-akadem.jpg')
     bot.send_photo(message.from_user.id, 'https://sun9-32.userapi.com/impg/UZOK2C_1V9wW35duluOe6qzd-Cvylq6b7Adx7A/l03lNyuSbi0.jpg?size=1080x1080&quality=95&sign=5dd987c7fe760a8d8533915e3f26c211&type=album')
     bot.send_message(message.chat.id, "Привет ✌️. Я бот компьютерного клуба CyberX Community. Хотели бы забронировать место?", reply_markup=markup)
 
@@ -46,7 +45,10 @@ def get_number(message):
         phone = message.text
         now = datetime.datetime.now()
         formatted_date = now.strftime("%d.%m")
-        bot.send_message(message.from_user.id, "Введите дату когда хотели бы придти по форме. Например: {}".format(formatted_date))
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item1 = types.KeyboardButton(formatted_date)
+        markup.add(item1)
+        bot.send_message(message.from_user.id, "Введите дату когда хотели бы придти по форме. Например: {}".format(formatted_date), reply_markup=markup)
         bot.register_next_step_handler(message, get_date)
     else:
         bot.send_message(message.from_user.id, "Некорректный номер телефона. Попробуйте еще раз и по форме")
@@ -59,7 +61,20 @@ def get_date(message):
     flag = filterx.filter_date(message.text)
     if flag == True:
         date = message.text
-        bot.send_message(message.from_user.id, "Введите время когда хотели бы придти по форме. Например: 09:30")
+        now = datetime.datetime.now()
+        hour = now.strftime("%H")
+        minute = now.strftime("%M")
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        if int(hour) + 1 < 10 and int(minute) < 30:
+            item1 = types.KeyboardButton(f"0{int(hour)+1}:00")
+        elif int(hour) + 1 < 10 and int(minute) >= 30:
+            item1 = types.KeyboardButton(f"0{int(hour)+1}:30")
+        elif int(hour) + 1 >=10 and int(minute) >= 30:
+            item1 = types.KeyboardButton(f"{int(hour)+1}:30")
+        else:
+            item1 = types.KeyboardButton(f"{int(hour)+1}:00")
+        markup.add(item1)
+        bot.send_message(message.from_user.id, "Введите время когда хотели бы придти по форме. Например: 09:30", reply_markup=markup)
         bot.register_next_step_handler(message, get_time)
     else:
         bot.send_message(message.from_user.id, "Некорректная дата. Попробуйте еще раз по форме")
@@ -70,6 +85,7 @@ def get_time(message):
     global time, date
     flag = filterx.filter_time(message.text, date)
     if flag == True:
+
         time = message.text
         get_total(message)
     else:
@@ -78,9 +94,13 @@ def get_time(message):
     
 def get_total(message):
     global time, name, date, phone
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("Забронировать")
+    markup.add(item1)
     bot.send_message(message.from_user.id, f'''Ваше имя и номер телефона: {name} {phone}
 Дата и время: {date} {time}''')
-    bot.send_message(message.from_user.id, 'Спасибо что используете нашего бота 😁. Ваши данные все сохранены 👌. В скором времени с вами свяжется администратор для подтверждения записи. Для дальнейших бронирований, можете нажать на кнопку "Забронировать" ниже 👇')
+    bot.send_message(message.from_user.id, '''Спасибо за использование бота 😁
+Ваши данные все сохранены 👌. В скором времени с вами свяжется администратор для подтверждения записи. Для дальнейших бронирований, можете нажать на кнопку "Забронировать" ниже 👇''', reply_markup=markup)
     bot.send_message('5729275489', f'''Имя: {name}
 Номер телефона: {phone}
 Дата и время брони: {date} {time}''')
