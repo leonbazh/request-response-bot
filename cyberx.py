@@ -85,7 +85,6 @@ def get_time(message):
     global time, date
     flag = filterx.filter_time(message.text, date)
     if flag == True:
-
         time = message.text
         get_total(message)
     else:
