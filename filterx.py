@@ -154,7 +154,7 @@ def filter_time(phrase, client):
     clientday = client[:2]
     clientmonth = client[3:]
     if len(phrase) == 5 and phrase[2] == ':':
-        if phrase[:2].isdigit() and phrase[3:].isdigit() and int(phrase[:2]) >= 0 and int(phrase[:2]) <=24 and int(phrase[3:])>= 0 and int(phrase[3:]) <= 59:
+        if phrase[:2].isdigit() and phrase[3:].isdigit() and int(phrase[:2]) >= 0 and int(phrase[:2]) <=23 and int(phrase[3:])>= 0 and int(phrase[3:]) <= 59:
             if clientday > day and clientmonth >= month :
                 return True
             elif clientday == day and clientmonth > month:

@@ -68,10 +68,6 @@ def get_number(message):
         bot.send_message(message.from_user.id, "Некорректный номер телефона. Попробуйте еще раз и по форме")
         bot.register_next_step_handler(message, get_number)
         
-def get_zone(message):
-    global zone
-
-
 
 def get_date(message):
     global date
@@ -82,7 +78,11 @@ def get_date(message):
         hour = now.strftime("%H")
         minute = now.strftime("%M")
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        if int(hour) + 1 < 10 and int(minute) < 30:
+        if int(hour) == 23 and int(minute) < 30:
+            item1 = types.KeyboardButton(f"00:00")
+        elif int(hour) == 23 and int(minute) >= 30:
+            item1 = types.KeyboardButton(f"00:30")
+        elif int(hour) + 1 < 10 and int(minute) < 30:
             item1 = types.KeyboardButton(f"0{int(hour)+1}:00")
         elif int(hour) + 1 < 10 and int(minute) >= 30:
             item1 = types.KeyboardButton(f"0{int(hour)+1}:30")
