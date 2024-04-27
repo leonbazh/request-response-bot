@@ -5,7 +5,7 @@ import datetime
 import aiogram
 
 
-token = '7032134012:AAGebBM3NygRmsIXaWW1grUcahAvdssjX6U'
+token = ''
 
 bot = telebot.TeleBot(token)
 
