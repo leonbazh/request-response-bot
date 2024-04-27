@@ -3,7 +3,7 @@ from telebot import types
 import filterx
 import datetime
 
-token = '7032134012:AAGebBM3NygRmsIXaWW1grUcahAvdssjX6U'
+token = ''
 
 bot = telebot.TeleBot(token)
 
