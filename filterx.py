@@ -137,6 +137,8 @@ def filter_date(phrase):
         if phrase[:2].isdigit() and phrase[3:].isdigit() and int(phrase[:2]) >= 1 and int(phrase[:2]) <=31 and int(phrase[3:])>= 1 and int(phrase[3:]) <= 12:
             if phrase[:2] >= day and phrase [3:] >= month:
                 return True
+            elif phrase[:2] < day and phrase[3:] > month:
+                return True
             else:
                 return False
         else:
