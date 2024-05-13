@@ -85,6 +85,7 @@ bad_words = [ '/' ,',' ,'.', 'бля', 'блядь', 'блять', 'b3ъeб', 'c
 
 
 
+
 def distance(a, b): 
     "Calculates the Levenshtein distance between a and b."
     n, m = len(a), len(b)
@@ -116,6 +117,7 @@ def filter_bad_words(phrase):
             #Если отличие этого фрагмента меньше или равно 25% этого слова, то считаем, что они равны.
             if distance(fragment, word) <= len(word)*0.25:
                 #Если они равны, выводим надпись о их нахождении.
+                print(word)
                 flag = False
                 
     return flag
@@ -177,3 +179,5 @@ def filter_count(phrase):
         return True
     else:
         return False
+
+print(filter_bad_words("Даянч"))
